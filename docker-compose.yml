@@ -14,21 +14,40 @@ services:
       - pgdata:/var/lib/postgresql/data # Saves your data safely on your hard drive so it doesn't vanish when you stop the container
 
   # CONTAINER 2: THE EXPRESS BACKEND API
+  # backend:
+  #   build: ./backend # Tells Docker to go look inside your backend folder for its Dockerfile blueprint
+  #   container_name: bookit-express-backend
+  #   restart: always
+  #   ports:
+  #     - "5000:5000"
+  #   environment:
+  #     - PORT=5000
+  #     - DATABASE_URL=postgresql://postgres:password123@db:5432/bookit?schema=public # "db" replaces "localhost" because containers talk to each other by name!
+  #     - JWT_SECRET=your_super_secure_jwt_secret_token_phrase
+  #     - NODE_ENV=production
+  #   depends_on:
+  #     - db # Wait until the database is fully running before starting the backend
+  #   command: >
+      # sh -c "npx prisma migrate deploy && npx prisma db seed && npm run start"
+
+      # CONTAINER 2: THE EXPRESS BACKEND API
   backend:
-    build: ./backend # Tells Docker to go look inside your backend folder for its Dockerfile blueprint
+    build: ./backend
     container_name: bookit-express-backend
     restart: always
     ports:
       - "5000:5000"
     environment:
       - PORT=5000
-      - DATABASE_URL=postgresql://postgres:password123@db:5432/bookit?schema=public # "db" replaces "localhost" because containers talk to each other by name!
+      - DATABASE_URL=postgresql://postgres:password123@db:5432/bookit?schema=public
       - JWT_SECRET=your_super_secure_jwt_secret_token_phrase
       - NODE_ENV=production
     depends_on:
-      - db # Wait until the database is fully running before starting the backend
+      - db
     command: >
-      sh -c "npx prisma migrate deploy && npx prisma db seed && npm run start"
+      sh -c "npx prisma migrate deploy && npx prisma db seed && npm run dev"
+
+
 
   # CONTAINER 3: THE NEXT.JS FRONTEND WEB INTERFACE
   frontend:

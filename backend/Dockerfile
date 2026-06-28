@@ -20,4 +20,4 @@ RUN npx prisma generate
 EXPOSE 5000
 
 # 8. Define the default execution command that starts your server engine when the container wakes up
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "dev"]
