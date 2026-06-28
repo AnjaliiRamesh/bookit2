@@ -1,0 +1,23 @@
+# Dependencies
+.node_modules
+/.pnp
+.pnp.js
+
+# Next.js Build Output
+.next/
+out/
+
+# Production Build Caches
+.wxt/
+.turbo/
+
+# Environment Variables & Local Secrets
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Operating System Files
+.DS_Store
+Thumbs.db

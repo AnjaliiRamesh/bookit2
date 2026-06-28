@@ -1,0 +1,46 @@
+services:
+  # CONTAINER 1: THE POSTGRESQL DATABASE ENGINE
+  db:
+    image: postgres:15-alpine
+    container_name: bookit-postgres-db
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password123
+      POSTGRES_DB: bookit
+    ports:
+      - "5432:5432" # Maps port 5432 from inside Docker to your local machine
+    volumes:
+      - pgdata:/var/lib/postgresql/data # Saves your data safely on your hard drive so it doesn't vanish when you stop the container
+
+  # CONTAINER 2: THE EXPRESS BACKEND API
+  backend:
+    build: ./backend # Tells Docker to go look inside your backend folder for its Dockerfile blueprint
+    container_name: bookit-express-backend
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - DATABASE_URL=postgresql://postgres:password123@db:5432/bookit?schema=public # "db" replaces "localhost" because containers talk to each other by name!
+      - JWT_SECRET=your_super_secure_jwt_secret_token_phrase
+      - NODE_ENV=production
+    depends_on:
+      - db # Wait until the database is fully running before starting the backend
+    command: >
+      sh -c "npx prisma migrate deploy && npx prisma db seed && npm run start"
+
+  # CONTAINER 3: THE NEXT.JS FRONTEND WEB INTERFACE
+  frontend:
+    build: ./frontend # Tells Docker to find your frontend folder Dockerfile
+    container_name: bookit-nextjs-frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1
+    depends_on:
+      - backend
+
+volumes:
+  pgdata: # Sets up our persistent hard-drive volume storage

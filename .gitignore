@@ -1,0 +1,12 @@
+# Ignore dependency modules in subdirectories
+backend/node_modules/
+frontend/node_modules/
+frontend/.next/
+
+# Ignore local environmental state files
+backend/.env
+frontend/.env.local
+
+# Operating system logs
+.DS_Store
+Thumbs.db

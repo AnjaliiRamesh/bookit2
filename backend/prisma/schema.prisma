@@ -1,0 +1,103 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  USER
+  ORGANIZER
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+enum LogAction {
+  EVENT_VIEW
+  BOOKING_STARTED
+  BOOKING_CONFIRMED
+  BOOKING_CANCELLED
+}
+
+model User {
+  id        String    @id @default(uuid())
+  email     String    @unique
+  password  String
+  name      String
+  role      Role      @default(USER)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  
+
+  // Relationships
+  bookings  Booking[]
+  events    Event[]   @relation("OrganizerEvents")
+
+  @@map("users")
+}
+
+
+model Event {
+  id             String    @id @default(uuid())
+  title          String
+  slug           String    @unique
+  description    String
+  date           DateTime
+  location       String    // This acts as our venue field!
+  price          Float     @default(0.0) // <-- ADD THIS LINE HERE!
+  capacity       Int
+  availableSeats Int
+  organizerId    String
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  // Relationships
+  organizer      User      @relation("OrganizerEvents", fields: [organizerId], references: [id], onDelete: Cascade)
+  bookings       Booking[]
+  activityLogs   ActivityLog[]
+
+  @@index([date])
+  @@index([organizerId])
+  @@map("events")
+}
+
+model Booking {
+  id        String        @id @default(uuid())
+  userId    String
+  eventId   String
+  status    BookingStatus @default(PENDING)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  // Relationships
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event     Event         @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  // Indexes
+  @@unique([userId, eventId])
+  @@index([userId])
+  @@index([eventId])
+  @@map("bookings")
+}
+
+model ActivityLog {
+  id        String    @id @default(uuid())
+  eventId   String?
+  action    LogAction
+  metadata  Json?     
+  createdAt DateTime  @default(now())
+
+  // Relationships
+  event     Event?    @relation(fields: [eventId], references: [id], onDelete: SetNull)
+
+  @@index([action])
+  @@index([eventId])
+  @@map("activity_logs")
+}
