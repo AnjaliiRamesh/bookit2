@@ -22,8 +22,9 @@ NODE_ENV=production
 Step 2: Run the App with Docker Compose
 Open your terminal at the project root folder (BookIt2/) and run this single command:
 
-``Bash
+```Bash
 docker-compose up --build
+
 
 
 📦 What Happens Behind the Scenes? (Database Setup)
