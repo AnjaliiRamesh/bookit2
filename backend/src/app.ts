@@ -14,11 +14,18 @@ const PORT = process.env.PORT || 5000;
 // app.use(cors());
 
 
+// Dynamically accept local runs or dockerized variables
+const allowedOrigins = [
+  'http://localhost:3000',
+  process.env.FRONTEND_URL
+].filter(Boolean) as string[];
+
 app.use(cors({
-  origin: 'http://localhost:3000', // Explicitly allow your Next.js application port
+  origin: allowedOrigins,
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'] // ✅ PATCH is fully locked in!
 }));
+
 app.use(express.json());
 
 // Router Registries
