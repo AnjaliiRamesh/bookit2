@@ -179,13 +179,31 @@ function CreateEventFormContent() {
         )}
 
         {/* LEFT COLUMN: INTERACTIVE IMAGE PREVIEW & UPLOAD PATHWAY CARD */}
-        <div className="md:col-span-4 bg-white border border-slate-100 rounded-3xl p-5 shadow-2xs text-left space-y-4">
-          <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono block">Image Visual Banner</label>
-          
-          <div className="aspect-[16/11] w-full bg-slate-50 rounded-2xl border border-slate-100 overflow-hidden shadow-2xs relative">
-            <img src={form.img} alt="Dynamic Preview" className="w-full h-full object-cover" />
-          </div>
+       {/* LEFT COLUMN: INTERACTIVE IMAGE PREVIEW & UPLOAD PATHWAY CARD */}
+<div className="md:col-span-4 bg-white border border-slate-100 rounded-3xl p-5 shadow-2xs text-left space-y-4">
+  <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono block">Image Visual Banner</label>
+  
+  <div className="aspect-[16/11] w-full bg-slate-100 rounded-2xl border border-slate-200 flex items-center justify-center overflow-hidden shadow-2xs relative">
+    {form.img && form.img.trim() !== "" ? (
+      <img 
+        src={form.img} 
+        alt="Dynamic Preview" 
+        className="w-full h-full object-cover"
+        onError={(e) => {
+          // Fallback if the URL pasted breaks or is invalid
+          (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?q=80&w=500";
+        }}
+      />
+    ) : (
+      <div className="text-slate-400 text-sm flex flex-col items-center gap-2 select-none">
+        <span className="text-xl">🖼️</span>
+        <span className="font-semibold text-xs">Image Preview Area</span>
+        <span className="text-[10px] text-slate-300">(Paste a valid URL below)</span>
+      </div>
+    )}
+  </div>
 
+  {/* ... Everything below this line remains exactly identical to your current file */}
           <div className="space-y-1.5">
             <label className="text-[11px] font-bold text-slate-500 flex items-center gap-1"><ImageIcon className="h-3.5 w-3.5 text-slate-400" /> Image URL Path</label>
             <input 

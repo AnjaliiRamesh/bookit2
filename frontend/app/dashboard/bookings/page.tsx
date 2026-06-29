@@ -15,6 +15,7 @@ interface BookingRecord {
     date: string;
     location: string;
     price: number;
+    imageUrl?: string;
   };
 }
 
@@ -44,24 +45,6 @@ export default function AttendeeBookingsPage() {
   useEffect(() => {
     fetchUserBookingsList();
   }, []);
-
-  // Triggers PATCH /api/v1/bookings/:id/cancel down to backend controller
-  /*
-  const handleCancelTicketClick = async (bookingId: string) => {
-    setActionMessage(null);
-    try {
-      await api.patch(`/bookings/${bookingId}/cancel`);
-      setActionMessage({ type: 'SUCCESS', text: 'Ticket successfully cancelled. Inventory slot restored.' });
-      await fetchUserBookingsList(); // Live refresh array values
-    } catch (error: any) {
-      setActionMessage({ 
-        type: 'ERROR', 
-        text: error.response?.data?.message || 'Failed to cancel ticket allocation rules.' 
-      });
-    }
-  };
-*/
-
 
 
 //this is to run locally
@@ -208,7 +191,19 @@ const handleCancelTicketClick = async (bookingId: string) => {
                 >
                   <div className="flex items-center gap-4 min-w-0">
                     <div className="h-14 w-20 rounded-xl bg-slate-50 border border-slate-100 overflow-hidden shrink-0">
-                      <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=400" alt="Thumb" className="w-full h-full object-cover" />
+                      <img 
+    // Layer 1: Read the image property dynamically from the nested event relation
+    src={item.event?.imageUrl && item.event.imageUrl.trim() !== "" 
+      ? item.event.imageUrl 
+      : "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=400" // Use your original link as the rock-solid default fallback
+    } 
+    alt="Thumb" 
+    className="w-full h-full object-cover" 
+    // Layer 2: Live rendering error backup handler
+    onError={(e) => {
+      (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=400";
+    }}
+  />
                     </div>
                     
                     <div className="min-w-0 space-y-1">

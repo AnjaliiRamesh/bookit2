@@ -118,7 +118,8 @@ export const getUserBookings = async (req: AuthenticatedRequest, res: Response):
             title: true,
             date: true,
             location: true,
-            price: true
+            price: true,
+            imageUrl: true
           }
         }
       }
