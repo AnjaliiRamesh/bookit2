@@ -176,7 +176,7 @@ export const cancelBooking = async (req: AuthenticatedRequest, res: Response): P
       `;
 
       // 4. METRIC STREAM: Write a dynamic historical log row entry
-      tx.activityLog.create({
+      await tx.activityLog.create({
         data: {
           eventId: booking.eventId,
           action: 'BOOKING_CANCELLED',

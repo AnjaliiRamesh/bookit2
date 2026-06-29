@@ -63,32 +63,85 @@ export default function AttendeeBookingsPage() {
 */
 
 // Overwrite ONLY this function inside frontend/app/dashboard/bookings/page.tsx
- const handleCancelTicketClick = async (bookingId: string) => {
-    setActionMessage(null);
-    try {
-      // Ensure the slash string structure matches the exact PATCH route mapping format 
-      const response = await api.patch(`/bookings/${bookingId}/cancel`);
+//  const handleCancelTicketClick = async (bookingId: string) => {
+//     setActionMessage(null);
+//     try {
+//       // Ensure the slash string structure matches the exact PATCH route mapping format 
+//       const response = await api.patch(`/bookings/${bookingId}/cancel`);
       
-      setActionMessage({ 
-        type: 'SUCCESS', 
-        text: response.data?.message || 'Ticket successfully cancelled. Inventory slot restored.' 
-      });
+//       setActionMessage({ 
+//         type: 'SUCCESS', 
+//         text: response.data?.message || 'Ticket successfully cancelled. Inventory slot restored.' 
+//       });
       
-      // Instantly run the fetch refresher to update data metrics smoothly on screen
-      await fetchUserBookingsList(); 
-    } catch (error: any) {
-      console.error("Axios Error Core Properties:", {
-        message: error.message,
-        code: error.code,
-        request: error.request
-      });
+//       // Instantly run the fetch refresher to update data metrics smoothly on screen
+//       await fetchUserBookingsList(); 
+//     } catch (error: any) {
+//       console.error("Axios Error Core Properties:", {
+//         message: error.message,
+//         code: error.code,
+//         request: error.request
+//       });
       
-      setActionMessage({ 
-        type: 'ERROR', 
-        text: error.response?.data?.message || 'Network communication error or invalid ticket assignment identifier.' 
-      });
-    }
-  };
+//       setActionMessage({ 
+//         type: 'ERROR', 
+//         text: error.response?.data?.message || 'Network communication error or invalid ticket assignment identifier.' 
+//       });
+//     }
+//   };
+
+
+// Overwrite ONLY this function inside frontend/app/dashboard/bookings/page.tsx
+//  const handleCancelTicketClick = async (bookingId: string) => {
+//   setActionMessage(null);
+//   try {
+//     // Force the exact absolute path that matches your backend app.ts configuration
+//     const response = await api.patch(`/api/v1/bookings/${bookingId}/cancel`);
+    
+//     setActionMessage({ 
+//       type: 'SUCCESS', 
+//       text: response.data?.message || 'Ticket successfully cancelled. Inventory slot restored.' 
+//     });
+    
+//     // Refresh the list automatically on screen
+//     await fetchUserBookingsList(); 
+//   } catch (error: any) {
+//     console.error("Axios Error Core Properties:", {
+//       message: error.message,
+//       code: error.code,
+//       response: error.response?.data
+//     });
+    
+//     setActionMessage({ 
+//       type: 'ERROR', 
+//       text: error.response?.data?.message || 'Failed to cancel the ticket. Please try again.' 
+//     });
+//   }
+// };
+
+const handleCancelTicketClick = async (bookingId: string) => {
+  setActionMessage(null);
+  try {
+    // Relative path matching your exact backend registry mapping
+    const response = await api.patch(`bookings/${bookingId}/cancel`);
+    
+    setActionMessage({ 
+      type: 'SUCCESS', 
+      text: response.data?.message || 'Ticket successfully cancelled. Inventory slot restored.' 
+    });
+    
+    // Refresh the listings automatically on your screen
+    await fetchUserBookingsList(); 
+  } catch (error: any) {
+    console.error("Local Operations Error:", error.response?.data || error.message);
+    
+    setActionMessage({ 
+      type: 'ERROR', 
+      text: error.response?.data?.message || 'Failed to cancel the ticket. Please check your network connection.' 
+    });
+  }
+};
+
   // Sort and filter dataset buckets dynamically based on status logs and timeline comparisons
   const filteredBookings = bookings.filter((item) => {
     const isEventPast = new Date(item.event.date).getTime() < new Date().getTime();

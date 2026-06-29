@@ -20,6 +20,8 @@ const router = Router();
 router.post('/', authenticateToken, createBooking); 
 router.get('/my-bookings', authenticateToken, getUserBookings); 
 router.patch('/:id/cancel', authenticateToken, cancelBooking);
+// Ensure the parameter token is exactly ":id" to match your controller's req.params.id
+// router.patch('/:id/cancel', authenticateToken, cancelBooking);
 
 
 export default router;
